@@ -10,7 +10,7 @@ apply`, and then enable rapid addition of new services.
 
 ## Getting Started
 
-1. Fork this repo
+1. Clone this repo
 2. Copy terraform.tfvars.example to terraform.tfvars
 3. Review and update terraform.tfvars
 5. Run `terraform apply`
