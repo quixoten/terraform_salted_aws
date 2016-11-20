@@ -1,3 +1,7 @@
+# Borrowed from
+# https://github.com/hashicorp/terraform/tree/master/examples/aws-two-tier
+
+
 # Specify the provider and access details
 provider "aws" {
   access_key = "${var.access_key}"
@@ -132,7 +136,7 @@ resource "aws_instance" "salt" {
   provisioner "remote-exec" {
     inline = [
       "sudo sh /tmp/terraform.bootstrap_salt.sh -M -X -Z stable",
-      "sudo sh /tmp/terraform.bootstrap_master.sh \"${var.git_deploy_repo_url}\""
+      "sudo sh /tmp/terraform.bootstrap_master.sh \"${self.tags.Name}\" \"${var.git_deploy_repo_url}\""
     ]
   }
 }

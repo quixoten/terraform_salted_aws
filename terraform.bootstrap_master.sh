@@ -1,10 +1,12 @@
 #!/bin/sh -
 
-repo_url="${1}"
+minion_id="${1}"
+repo_url="${2}"
 salt_root="/srv/salt"
 ssh_wrapper="${salt_root}/ssh_with_deploy_key.sh"
 deploy_key="${salt_root}/deploy_key.id_rsa"
 deploy_script="${salt_root}/deploy.sh"
+active_code="${salt_root}/current"
 
 
 # Create the salt root directory if it doesn't already exist
@@ -96,3 +98,8 @@ chmod 0755 "${deploy_script}"
 
 # Deploy the salt code
 sh "${deploy_script}"
+
+
+# Finish configuring with salt-call
+cd "${active_code}"
+sudo salt-call --id="${minion_id}" state.highstate
