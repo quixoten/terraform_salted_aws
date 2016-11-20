@@ -1,0 +1,30 @@
+# AWS credentials
+access_key = "your_aws_access_key"
+secret_key = "your_aws_secret_key"
+
+
+# AWS region
+region = "us-west-1"
+
+
+# The path to a public that will be used to create an AWS key pair (named
+# terraform by default). This key will be used to provision the machines
+# after they are created.
+#
+# NOTE: To ensure provisioning works correctly, the corresponding private key
+# should be added to your SSH agent, e.g, `ssh-add ~/.ssh/id_rsa`
+public_key_path = "~/.ssh/id_rsa.pub"
+
+
+# The URL used to clone your salt repo on the saltmaster.
+#
+# Generate a deploy key for your salt repo:
+#   ssh-keygen -b 4096 -N '' -f terraform.git_deploy_key.id_rsa
+#
+# Then use the contents of terraform.git_deploy_key.id_rsa.pub to add the
+# deploy key to your repo, e.g., at
+# https://github.com/your_username/terraform_salt_on_aws/settings/keys
+git_deploy_repo_url = "git@github.com:your_username/terraform_salt_on_aws.git"
+
+
+# vim: set ft=terraform:

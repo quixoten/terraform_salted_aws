@@ -1,0 +1,17 @@
+id: local-sand-testservice1
+
+failhard: true
+
+file_client: local
+
+file_roots:
+  base:
+    - ./salt
+
+pillar_roots:
+  base:
+    - ./pillar
+
+# gpg_keydir: ./salt-call/etc/salt/gpgkeys
+
+# vim: set ft=yaml:

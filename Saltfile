@@ -1,0 +1,7 @@
+salt-call:
+  config_dir: ./salt-call/etc/salt
+  local: true
+  log_file: /dev/null
+  log_file_level: quiet
+  log_level: info
+  out: highstate
