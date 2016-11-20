@@ -11,6 +11,8 @@ pillar_roots:
   base:
     - ./pillar
 
+root_dir: ./salt-call
+
 # gpg_keydir: ./salt-call/etc/salt/gpgkeys
 
 # vim: set ft=yaml:

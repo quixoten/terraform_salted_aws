@@ -85,7 +85,7 @@ data "aws_ami" "trusty" {
 
 resource "aws_instance" "salt" {
   tags = {
-    Name = "aws-sand-salt1"
+    Name = "aws-dev-salt1"
   }
 
   # The connection block tells our provisioner how to
@@ -114,29 +114,53 @@ resource "aws_instance" "salt" {
   # backend instances.
   subnet_id = "${aws_subnet.default.id}"
 
-  # Copy the deploy key to the remote machine
-  provisioner "file" {
-    source = "${var.git_deploy_key_path}"
-    destination = "/tmp/terraform.git_deploy_key.id_rsa"
+  # Create provisioning directory
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /tmp/terraform"
+    ]
   }
+
+  # Create an archive of the salt code to boostrap the machine with salt-call
+  provisioner "local-exec" {
+    command = "tar -c formulas pillar salt salt-call Saltfile|gzip > thin.tgz"
+  }
+
+  # Copy the archive to the remote machine
+  provisioner "file" {
+    source = "thin.tgz"
+    destination = "/tmp/terraform/thin.tgz"
+  }
+
+  # # Copy the deploy key to the remote machine
+  # provisioner "file" {
+  #   source = "${var.git_deploy_key_path}"
+  #   destination = "/tmp/terraform.git_deploy_key.id_rsa"
+  # }
 
   # Copy the salt bootstrap script to the remote machine
   provisioner "file" {
     source = "terraform.bootstrap_salt.sh"
-    destination = "/tmp/terraform.bootstrap_salt.sh"
+    destination = "/tmp/terraform/bootstrap_salt.sh"
   }
 
-  # Copy the salt master provision script to the remote machine
+  # Copy the salt master thin provision script to the remote machine
   provisioner "file" {
-    source = "terraform.bootstrap_master.sh"
-    destination = "/tmp/terraform.bootstrap_master.sh"
+    source = "terraform.bootstrap_thin.sh"
+    destination = "/tmp/terraform/bootstrap_master.sh"
   }
+
+  # # Copy the salt master provision script to the remote machine
+  # provisioner "file" {
+  #   source = "terraform.bootstrap_master.sh"
+  #   destination = "/tmp/terraform.bootstrap_master.sh"
+  # }
 
   # We run a remote provisioner on the instance after creating it.
   provisioner "remote-exec" {
     inline = [
-      "sudo sh /tmp/terraform.bootstrap_salt.sh -M -X -Z stable",
-      "sudo sh /tmp/terraform.bootstrap_master.sh \"${self.tags.Name}\" \"${var.git_deploy_repo_url}\""
+      "sudo sh /tmp/terraform/bootstrap_salt.sh -M -X -Z stable",
+      "sudo sh /tmp/terraform/bootstrap_master.sh \"${self.tags.Name}\" \"${var.git_deploy_repo_url}\""
     ]
   }
 }
