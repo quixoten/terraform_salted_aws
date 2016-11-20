@@ -35,8 +35,8 @@ created.
 To create a deploy key, run:
   ssh-keygen -b 4096 -N '' -f terraform.git_deploy_key.id_rsa
 
-Use the contents of terraform.git_deploy_key.id_rsa.pub to create a deploy key
-for this repo through its settings in the GitHub Web UI
+Use the contents of terraform.git_deploy_key.id_rsa.pub to create a read-only
+deploy key for this repo through its settings in the GitHub Web UI
 DESCRIPTION
 
   default  = "terraform.git_deploy_key.id_rsa"

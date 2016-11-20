@@ -21,10 +21,10 @@ public_key_path = "~/.ssh/id_rsa.pub"
 # Generate a deploy key for your salt repo:
 #   ssh-keygen -b 4096 -N '' -f terraform.git_deploy_key.id_rsa
 #
-# Then use the contents of terraform.git_deploy_key.id_rsa.pub to add the
+# Then use the contents of terraform.git_deploy_key.id_rsa.pub to add read-only
 # deploy key to your repo, e.g., at
-# https://github.com/your_username/terraform_salt_on_aws/settings/keys
-git_deploy_repo_url = "git@github.com:your_username/terraform_salt_on_aws.git"
+# https://github.com/your_username/terraform_salted_aws/settings/keys
+git_deploy_repo_url = "git@github.com:your_username/terraform_salted_aws.git"
 
 
 # vim: set ft=terraform:

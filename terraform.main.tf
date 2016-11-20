@@ -116,10 +116,23 @@ resource "aws_instance" "salt" {
     destination = "/tmp/terraform.git_deploy_key.id_rsa"
   }
 
+  # Copy the salt bootstrap script to the remote machine
+  provisioner "file" {
+    source = "terraform.bootstrap_salt.sh"
+    destination = "/tmp/terraform.bootstrap_salt.sh"
+  }
+
+  # Copy the salt master provision script to the remote machine
+  provisioner "file" {
+    source = "terraform.bootstrap_master.sh"
+    destination = "/tmp/terraform.bootstrap_master.sh"
+  }
+
   # We run a remote provisioner on the instance after creating it.
   provisioner "remote-exec" {
-    scripts = [
-      "terraform.provision/salt.sh"
+    inline = [
+      "sudo sh /tmp/terraform.bootstrap_salt.sh -M -X -Z stable",
+      "sudo sh /tmp/terraform.bootstrap_master.sh \"${var.git_deploy_repo_url}\""
     ]
   }
 }
