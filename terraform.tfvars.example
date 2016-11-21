@@ -7,9 +7,9 @@ secret_key = "your_aws_secret_key"
 region = "us-west-1"
 
 
-# The path to a public that will be used to create an AWS key pair (named
-# terraform by default). This key will be used to provision the machines
-# after they are created.
+# The path to a public key that will be used to create an AWS key pair (named
+# terraform by default). This key will be used to provision the machines after
+# they are created.
 #
 # NOTE: To ensure provisioning works correctly, the corresponding private key
 # should be added to your SSH agent, e.g, `ssh-add ~/.ssh/id_rsa`
