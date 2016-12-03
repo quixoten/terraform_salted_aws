@@ -10,35 +10,34 @@ provider "aws" {
 }
 
 # Create a VPC to launch our instances into
-resource "aws_vpc" "default" {
+resource "aws_vpc" "terraform_salted_aws" {
   cidr_block = "10.0.0.0/16"
 }
 
 # Create an internet gateway to give our subnet access to the outside world
-resource "aws_internet_gateway" "default" {
-  vpc_id = "${aws_vpc.default.id}"
+resource "aws_internet_gateway" "terraform_salted_aws" {
+  vpc_id = "${aws_vpc.terraform_salted_aws.id}"
 }
 
 # Grant the VPC internet access on its main route table
 resource "aws_route" "internet_access" {
-  route_table_id         = "${aws_vpc.default.main_route_table_id}"
+  route_table_id         = "${aws_vpc.terraform_salted_aws.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${aws_internet_gateway.default.id}"
+  gateway_id             = "${aws_internet_gateway.terraform_salted_aws.id}"
 }
 
 # Create a subnet to launch our instances into
-resource "aws_subnet" "default" {
-  vpc_id                  = "${aws_vpc.default.id}"
+resource "aws_subnet" "terraform_salted_aws" {
+  vpc_id                  = "${aws_vpc.terraform_salted_aws.id}"
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 }
 
-# Our default security group to access
-# the instances over SSH and HTTP
-resource "aws_security_group" "default" {
+# Our security group to access the instances over SSH and HTTP
+resource "aws_security_group" "terraform_salted_aws" {
   name        = "terraform_example"
   description = "Used in the terraform"
-  vpc_id      = "${aws_vpc.default.id}"
+  vpc_id      = "${aws_vpc.terraform_salted_aws.id}"
 
   # SSH access from anywhere
   ingress {
@@ -107,14 +106,14 @@ resource "aws_instance" "salt" {
   key_name = "${aws_key_pair.auth.id}"
 
   # Our Security group to allow HTTP and SSH access
-  vpc_security_group_ids = ["${aws_security_group.default.id}"]
+  vpc_security_group_ids = ["${aws_security_group.terraform_salted_aws.id}"]
 
   # We're going to launch into the same subnet as our ELB. In a production
   # environment it's more common to have a separate private subnet for
   # backend instances.
-  subnet_id = "${aws_subnet.default.id}"
+  subnet_id = "${aws_subnet.terraform_salted_aws.id}"
 
-  # Create provisioning directory
+  # Create working directory for provisioning
   provisioner "remote-exec" {
     inline = [
       "mkdir /tmp/terraform"
@@ -132,35 +131,23 @@ resource "aws_instance" "salt" {
     destination = "/tmp/terraform/thin.tgz"
   }
 
-  # # Copy the deploy key to the remote machine
-  # provisioner "file" {
-  #   source = "${var.git_deploy_key_path}"
-  #   destination = "/tmp/terraform.git_deploy_key.id_rsa"
-  # }
-
-  # Copy the salt bootstrap script to the remote machine
+  # Copy the salt-bootstrap provision script to the remote machine
   provisioner "file" {
-    source = "terraform.bootstrap_salt.sh"
-    destination = "/tmp/terraform/bootstrap_salt.sh"
+    source = "terraform.provision.bootstrap-salt.sh"
+    destination = "/tmp/terraform/bootstrap-salt.sh"
   }
 
-  # Copy the salt master thin provision script to the remote machine
+  # Copy the salt-call provision script to the remote machine
   provisioner "file" {
-    source = "terraform.bootstrap_thin.sh"
-    destination = "/tmp/terraform/bootstrap_master.sh"
+    source = "terraform.provision.salt-call.sh"
+    destination = "/tmp/terraform/salt-call.sh"
   }
-
-  # # Copy the salt master provision script to the remote machine
-  # provisioner "file" {
-  #   source = "terraform.bootstrap_master.sh"
-  #   destination = "/tmp/terraform.bootstrap_master.sh"
-  # }
 
   # We run a remote provisioner on the instance after creating it.
   provisioner "remote-exec" {
     inline = [
-      "sudo sh /tmp/terraform/bootstrap_salt.sh -M -X -Z stable",
-      "sudo sh /tmp/terraform/bootstrap_master.sh \"${self.tags.Name}\" \"${var.git_deploy_repo_url}\""
+      "sudo sh /tmp/terraform/bootstrap-salt.sh -M -X -Z stable",
+      "sudo sh /tmp/terraform/salt-call.sh \"${self.tags.Name}\""
     ]
   }
 }

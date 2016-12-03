@@ -10,8 +10,9 @@ apply`, and then enable rapid addition of new services.
 
 ## Getting Started
 
-1. Fork this repo (required to add deploy keys)
+1. Fork this repo
 2. Clone your fork
 3. Copy terraform.tfvars.example to terraform.tfvars
 4. Review and update terraform.tfvars
-5. Run `terraform apply`
+5. Run `terraform plan`
+6. Run `terraform apply`
