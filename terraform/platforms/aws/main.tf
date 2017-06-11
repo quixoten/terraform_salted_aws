@@ -11,7 +11,7 @@ provider "aws" {
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
-  tags = { Name = "terraform_salted_aws" }
+  tags = { Name = "${var.site_name}" }
   cidr_block = "10.0.0.0/16"
 }
 
@@ -70,11 +70,11 @@ resource "aws_key_pair" "auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
-data "aws_ami" "trusty" {
+data "aws_ami" "xenial" {
   most_recent = true
   filter {
     name = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
   filter {
     name = "virtualization-type"
@@ -85,7 +85,7 @@ data "aws_ami" "trusty" {
 
 resource "aws_instance" "salt" {
   tags = {
-    Name = "aws-dev-salt1"
+    Name = "${var.site_name}-salt1"
   }
 
   # The connection block tells our provisioner how to
@@ -97,11 +97,11 @@ resource "aws_instance" "salt" {
     # The connection will use the local SSH agent for authentication.
   }
 
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
 
   # Lookup the correct AMI based on the region
   # we specified
-  ami = "${data.aws_ami.trusty.id}"
+  ami = "${data.aws_ami.xenial.id}"
 
   # The name of our SSH keypair we created above.
   key_name = "${aws_key_pair.auth.id}"

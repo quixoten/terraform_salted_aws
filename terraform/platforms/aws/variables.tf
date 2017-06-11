@@ -21,3 +21,8 @@ variable "region" {
   description = "AWS region to launch servers."
   default     = "us-west-2"
 }
+
+variable "site_name" {
+  description = "The name of your site."
+  default     = "aws-test"
+}

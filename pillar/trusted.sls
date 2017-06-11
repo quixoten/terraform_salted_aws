@@ -39,7 +39,7 @@
 # | aws-int-web2       | example.com | int  | integration | aws-int-web2.int.example.com        | aws-int-web2       |      2 |           002 | web     | aws      | aws-int      |
 # | uswest2b-prod-db20 | example.com | prod | production  | uswest2b-prod-db20.prod.example.com | uswest2b-prod-db20 |     20 |           020 | db      | uswest2b | uswest2b-dev |
 # | site1-prod-lb1     | example.com | prod | production  | site1-prod-lb1.prod.example.com     | site1-prod-lb1     |      1 |           001 | lb      | site1    | site1-dev    |
-# | sa-prod-lb3        | example.com | prod | production  | sa-prod-lb1.prod.example.com        | sa-prod-lb3        |      3 |           003 | lb      | sa       | sa-dev       |
+# | sa-test-lb3        | example.com | test | testing     | sa-test-lb3.test.example.com        | sa-test-lb3        |      3 |           003 | lb      | sa       | sa-test      |
 #
 #
 # The duplication of the env in the fqdn is done so that the hostname can be

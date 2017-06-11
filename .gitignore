@@ -1,4 +1,4 @@
-/terraform.tfvars
+/terraform/sites/*/terraform.tfvars
 /terraform.tfstate
 /terraform.tfstate.backup
 /thin.tgz

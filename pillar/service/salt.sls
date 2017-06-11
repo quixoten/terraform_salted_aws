@@ -10,5 +10,5 @@ salt:
         - /srv/salt/current/pillar
 
   minion:
-    id: {{ pillar.trusted.fqdn }}
+    id: {{ pillar.trusted.hostname }}
     master: {{ pillar.trusted.fqdn }}
